@@ -43,54 +43,6 @@ function syncScroll(textareaId, backdropId) {
     }
 }
 
-// ==========================================
-// 12. 二维码放大弹窗逻辑
-// ==========================================
-
-function getQrModalData() {
-    return {
-        weixin: {
-            icon: '<i class="fa-brands fa-weixin text-green-600"></i>',
-            iconBg: 'bg-green-100',
-            title: t('qr.weixin.title'),
-            subtitle: t('qr.weixin.subtitle'),
-            img: './assets/weixin.webp',
-            alt: '微信公众号',
-            hint: t('qr.weixin.hint')
-        },
-        donate: {
-            icon: '<i class="fa-solid fa-hand-holding-heart text-emerald-600"></i>',
-            iconBg: 'bg-emerald-100',
-            title: t('qr.donate.title'),
-            subtitle: t('qr.donate.subtitle'),
-            img: 'https://cdn-1258574687.cos.ap-shanghai.myqcloud.com/img/%2F2026%2F01%2F18ecce7c224ce0ea4c59394c29e408f8-e0d1db45.webp',
-            alt: '微信支付',
-            hint: t('qr.donate.hint')
-        }
-    };
-}
-
-function openQrModal(type) {
-    const data = getQrModalData()[type];
-    if (!data) return;
-    const modal = document.getElementById('qr-modal');
-    document.getElementById('qr-modal-icon').className = 'w-10 h-10 rounded-xl flex items-center justify-center text-lg ' + data.iconBg;
-    document.getElementById('qr-modal-icon').innerHTML = data.icon;
-    document.getElementById('qr-modal-title').textContent = data.title;
-    document.getElementById('qr-modal-subtitle').textContent = data.subtitle;
-    document.getElementById('qr-modal-img').src = data.img;
-    document.getElementById('qr-modal-img').alt = data.alt;
-    document.getElementById('qr-modal-hint').textContent = data.hint;
-    modal.classList.remove('hidden');
-}
-
-function closeQrModal() {
-    const modal = document.getElementById('qr-modal');
-    if (modal) modal.classList.add('hidden');
-}
-
-window.openQrModal = openQrModal;
-window.closeQrModal = closeQrModal;
 const MODULE_DEFS = [
     { id: 1, nameKey: "mod.app", key: "app", editable: false },
     { id: 2, nameKey: "mod.platforms", key: "platforms", editable: true },
@@ -1047,7 +999,11 @@ function renderControls(mod) {
 
     // 绑定事件
     body.querySelectorAll('input, select').forEach(el => {
-        el.addEventListener('change', (e) => {
+        // Text/number fields must update YAML while editing. Relying only on
+        // `change` can leave the visible value newer than the saved YAML when
+        // the user clicks the save button immediately after typing.
+        const eventName = el.matches('select, input[type="checkbox"]') ? 'change' : 'input';
+        el.addEventListener(eventName, (e) => {
             updateYamlFromUI(mod.key, e.target.dataset.path, e.target);
         });
     });
@@ -5839,15 +5795,4 @@ function reorderDayPlanPeriods(presetName, planKey, orderedKeys) {
 
     clearTimeout(window._tlRenderTimer);
     window._tlRenderTimer = setTimeout(() => syncTimelineToUI(), 500);
-}
-
-// ==========================================
-// 支持侧栏 折叠/展开
-// ==========================================
-function toggleSupportSidebar() {
-    const wrap = document.querySelector('.support-sidebar-wrap');
-    const btn = document.getElementById('sidebar-toggle-btn');
-    const isCollapsed = wrap.classList.toggle('collapsed');
-    btn.classList.toggle('is-collapsed', isCollapsed);
-    btn.title = isCollapsed ? t('sidebar.expand') : t('sidebar.collapse');
 }

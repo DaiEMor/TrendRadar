@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+
+# Local TrendRadar runtime output and configuration backups.
+output/
+config/backups/

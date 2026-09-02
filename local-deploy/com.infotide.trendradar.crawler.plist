@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.infotide.trendradar.crawler</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/administrator/.local/bin/uv</string>
+    <string>run</string>
+    <string>python</string>
+    <string>-m</string>
+    <string>trendradar</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/administrator/.local/share/InfoTide/TrendRadar</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>DOCKER_CONTAINER</key>
+    <string>true</string>
+    <key>PYTHONUNBUFFERED</key>
+    <string>1</string>
+  </dict>
+
+  <key>StartInterval</key>
+  <integer>1800</integer>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+
+  <key>StandardOutPath</key>
+  <string>/Users/administrator/.local/share/InfoTide/TrendRadar/output/logs/crawler.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/administrator/.local/share/InfoTide/TrendRadar/output/logs/crawler-error.log</string>
+</dict>
+</plist>

@@ -28,7 +28,7 @@
             <!-- 隐私安全提示 -->
             <div class="hidden lg:flex items-center text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100 select-none">
                 <i class="fa-solid fa-shield-halved mr-1.5 text-green-500"></i>
-                <span data-i18n="nav.privacy">纯静态页面，数据仅保存在你的本地浏览器，请放心使用</span>
+                <span id="local-config-status">正在读取本机配置…</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -40,8 +40,14 @@
                 <button onclick="openLoadConfigModal()" class="text-xs text-blue-600 hover:text-blue-800 underline flex items-center gap-1">
                     <i class="fa-solid fa-cloud-arrow-down"></i><span data-i18n="nav.loadLatest">加载官网最新配置</span>
                 </button>
+                <a href="/" class="text-xs text-gray-600 hover:text-gray-900 flex items-center gap-1">
+                    <i class="fa-solid fa-chart-line"></i><span>查看报告</span>
+                </a>
                 <button onclick="copyResult()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors shadow-sm">
                     <i class="fa-regular fa-copy mr-1.5"></i><span data-i18n="nav.copyConfig">复制配置</span>
+                </button>
+                <button id="local-save-btn" onclick="saveAllToServer()" class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors shadow-sm">
+                    <i class="fa-solid fa-floppy-disk mr-1.5"></i><span>保存并应用</span>
                 </button>
             </div>
         </div>
@@ -101,7 +107,7 @@
             </div>
         </div>
 
-        <!-- 右侧：可视化配置 + 支持侧栏 -->
+        <!-- 右侧：可视化配置 -->
         <div class="w-1/2 flex">
         <!-- 可视化配置 (Visual) -->
         <div class="flex-1 flex flex-col bg-gray-50 min-w-0">
@@ -135,110 +141,6 @@
             </div>
         </div>
 
-        <!-- 支持侧栏 (固定，不随内容滚动) -->
-        <div class="support-sidebar-wrap flex-shrink-0 relative">
-            <!-- 折叠/展开按钮 (侧栏左边缘) -->
-            <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSupportSidebar()" title="收起侧栏">
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-            </button>
-            <div id="support-sidebar" class="support-sidebar border-l border-gray-200 bg-gradient-to-b from-orange-50/30 via-white to-pink-50/20 flex flex-col">
-            <!-- 侧栏标题 -->
-            <div class="px-3 py-3 border-b border-gray-100 bg-white/80 sidebar-header-hover group/header">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 bg-gradient-to-br from-orange-400 to-pink-500 rounded-lg flex items-center justify-center">
-                        <i class="fa-solid fa-heart text-white text-[10px]"></i>
-                    </div>
-                    <span class="text-sm font-bold text-gray-700 tracking-tight" data-i18n="sidebar.title">支持项目</span>
-                </div>
-                <p class="sidebar-quote text-[10px] text-gray-400 mt-1.5 leading-relaxed italic" data-i18n="sidebar.quote">若 TrendRadar 曾为你捕捉价值，不妨为它注入动力，助其持续进化</p>
-            </div>
-
-            <!-- 卡片列表 -->
-            <div class="flex-1 p-3 space-y-3 overflow-y-auto sidebar-scroll">
-
-                <!-- 01: 点亮 Star -->
-                <a href="https://github.com/sansan0/TrendRadar" target="_blank" class="sidebar-card group block">
-                    <div class="flex items-center gap-2 mb-2.5">
-                        <div class="sidebar-card-icon bg-orange-100 text-orange-500 group-hover:bg-orange-200">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <div class="text-xs font-bold text-gray-800 leading-tight" data-i18n="sidebar.star">点亮 Star</div>
-                            <div class="text-[10px] text-gray-400 leading-tight mt-0.5" data-i18n="sidebar.starDesc">让更多人发现它</div>
-                        </div>
-                    </div>
-                    <div class="sidebar-cta bg-gradient-to-r from-orange-400 to-red-500 text-white group-hover:from-orange-500 group-hover:to-red-600 shadow-sm group-hover:shadow-md">
-                        <i class="fa-brands fa-github mr-1"></i><span data-i18n="sidebar.goGithub">前往 GitHub</span>
-                    </div>
-                </a>
-
-                <!-- 02: 不迷路 (微信) -->
-                <div class="sidebar-card sidebar-card-clickable group" onclick="openQrModal('weixin')">
-                    <div class="flex items-center gap-2 mb-2.5">
-                        <div class="sidebar-card-icon bg-green-100 text-green-600 group-hover:bg-green-200">
-                            <i class="fa-brands fa-weixin"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <div class="text-xs font-bold text-gray-800 leading-tight" data-i18n="sidebar.follow">不迷路</div>
-                            <div class="text-[10px] text-gray-400 leading-tight mt-0.5" data-i18n="sidebar.followDesc">获取更新通知</div>
-                        </div>
-                    </div>
-                    <div class="flex justify-center relative">
-                        <div class="sidebar-qr group-hover:shadow-md">
-                            <img src="./assets/weixin.webp" alt="微信公众号" class="w-full h-full object-contain">
-                        </div>
-                        <div class="sidebar-enlarge-hint">
-                            <i class="fa-solid fa-expand mr-1"></i><span data-i18n="sidebar.clickEnlarge">点击放大</span>
-                        </div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 text-center mt-2" data-i18n="sidebar.scanFollow">扫码关注公众号</p>
-                </div>
-
-                <!-- 03: 随心赞赏 -->
-                <div class="sidebar-card sidebar-card-clickable group" onclick="openQrModal('donate')">
-                    <div class="flex items-center gap-2 mb-2.5">
-                        <div class="sidebar-card-icon bg-emerald-100 text-emerald-600 group-hover:bg-emerald-200">
-                            <i class="fa-solid fa-hand-holding-heart"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <div class="text-xs font-bold text-gray-800 leading-tight" data-i18n="sidebar.donate">随心赞赏</div>
-                            <div class="text-[10px] text-gray-400 leading-tight mt-0.5" data-i18n="sidebar.donateDesc">1 元也是鼓励</div>
-                        </div>
-                    </div>
-                    <div class="flex justify-center relative">
-                        <div class="sidebar-qr group-hover:shadow-md">
-                            <img src="https://cdn-1258574687.cos.ap-shanghai.myqcloud.com/img/%2F2026%2F01%2F18ecce7c224ce0ea4c59394c29e408f8-e0d1db45.webp" alt="微信支付" class="w-full h-full object-contain">
-                        </div>
-                        <div class="sidebar-enlarge-hint">
-                            <i class="fa-solid fa-expand mr-1"></i><span data-i18n="sidebar.clickEnlarge">点击放大</span>
-                        </div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 text-center mt-2" data-i18n="sidebar.scanDonate">微信扫码 · 丰俭由人</p>
-                </div>
-
-                <!-- 04: 探索更多 -->
-                <a href="https://sansan0.github.io/mao-map/" target="_blank" class="sidebar-card group block">
-                    <div class="flex items-center gap-2 mb-2.5">
-                        <div class="sidebar-card-icon bg-red-100 text-red-500 group-hover:bg-red-200">
-                            <i class="fa-solid fa-map-location-dot"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <div class="text-xs font-bold text-gray-800 leading-tight" data-i18n="sidebar.explore">探索更多</div>
-                            <div class="text-[10px] text-gray-400 leading-tight mt-0.5" data-i18n="sidebar.exploreDesc">另一个用心的作品</div>
-                        </div>
-                    </div>
-                    <div class="sidebar-cta bg-red-50 text-red-600 border border-red-100 group-hover:bg-red-100 group-hover:text-red-700">
-                        <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i><span data-i18n="sidebar.goExplore">去看看</span>
-                    </div>
-                </a>
-            </div>
-
-            <!-- 底部寄语 -->
-            <div class="px-3 py-2.5 border-t border-gray-100 bg-white/60">
-                <p class="text-[10px] text-gray-300 text-center italic font-serif tracking-wide" data-i18n="sidebar.footer">"开源不易，感谢支持"</p>
-            </div>
-            </div>
-        </div>
         </div>
     </main>
 
@@ -464,30 +366,6 @@
         </div>
     </div>
 
-    <!-- 二维码放大弹窗 -->
-    <div id="qr-modal" class="modal-overlay hidden" onclick="if(event.target===this){closeQrModal()}">
-        <div class="modal-content support-modal-content max-w-sm w-[90%] p-6 text-center">
-            <div class="flex items-center justify-between mb-5">
-                <div class="flex items-center gap-3">
-                    <div id="qr-modal-icon" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg"></div>
-                    <div class="text-left">
-                        <h3 id="qr-modal-title" class="text-lg font-bold text-gray-800"></h3>
-                        <p id="qr-modal-subtitle" class="text-xs text-gray-500 mt-0.5"></p>
-                    </div>
-                </div>
-                <button onclick="closeQrModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            </div>
-            <div class="flex justify-center">
-                <div class="w-56 h-56 bg-white border border-gray-100 rounded-2xl p-3 shadow-sm">
-                    <img id="qr-modal-img" src="" alt="" class="w-full h-full object-contain">
-                </div>
-            </div>
-            <p id="qr-modal-hint" class="text-xs text-gray-400 mt-4"></p>
-        </div>
-    </div>
-
     <!-- 新建调度模式弹窗 -->
     <div id="tl-new-preset-modal" class="modal-overlay hidden">
         <div class="modal-content">
@@ -564,5 +442,6 @@
 
     <script src="./assets/i18n.js"></script>
     <script src="./assets/script.js"></script>
+    <script src="./assets/local-api.js"></script>
 </body>
 </html>
